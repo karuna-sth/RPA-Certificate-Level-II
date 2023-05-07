@@ -7,6 +7,12 @@ Library    RPA.PDF
 Library    RPA.Tables
 Library    RPA.JavaAccessBridge
 
+*** Variables ***
+${image_path}=    ${CURDIR}${/}output${/}images${/}
+${reciepts_path}=    ${CURDIR}${/}output${/}reciept${/}
+${zip_path}=    ${CURDIR}${/}output${/}
+
+
 *** Tasks ***
 order robots from robotsparebinindustries
     Download orders file
@@ -59,13 +65,13 @@ create pdf
     [Arguments]    ${filename}
     Wait Until Element Is Visible    id:receipt
     ${html}=    Get Element Attribute    id:receipt    outerHTML
-    Html To Pdf    ${html}    output/receipt/${filename}.pdf
+    Html To Pdf    ${html}    ${reciepts_path}${filename}.pdf
 
 screenshot the robot
     [Arguments]    ${filename}
     Wait Until Element Is Visible    id:robot-preview-image
     Screenshot    id:robot-preview-image    
-    ...    output/images/${filename}.png
+    ...    ${image_path}${filename}.png
 
 next order 
     Click Button    xpath://button[@id='order-another']
@@ -73,10 +79,10 @@ next order
 Embeed robot image to receipt pdf
     [Arguments]    ${filename}
     Add Watermark Image To Pdf    
-    ...    output/images/${filename}.png    
-    ...    output/receipt/${filename}.pdf
-    ...    output/receipt/${filename}.pdf
+    ...    ${image_path}${filename}.png    
+    ...    ${reciepts_path}${filename}.pdf
+    ...    ${reciepts_path}${filename}.pdf
 
 create archive
-    Archive Folder With Zip    output/receipt    output/receipts.zip
+    Archive Folder With Zip    ${reciepts_path}    ${zip_path}receipts.zip
 
